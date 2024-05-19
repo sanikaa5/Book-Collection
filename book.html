@@ -31,7 +31,7 @@
             const description = urlParams.get('description');
 
             // Fetch book image from Google Books API (Replace 'YOUR_API_KEY' with your actual API key)
-            const googleBooksAPI = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(title)}+inauthor:${encodeURIComponent(author)}&key=AIzaSyCgNrcHcxgVOWAv5zCg2_EkROZ2xkB1UYA`;
+            const googleBooksAPI = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(title)}+inauthor:${encodeURIComponent(author)}&key=YOUR_API_KEY`;
 
             fetch(googleBooksAPI)
                 .then(response => response.json())
