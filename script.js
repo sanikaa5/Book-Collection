@@ -3,6 +3,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const bookList = document.getElementById('books');
     let booksArray = []; // Array to store books
 
+    // Fetch existing books from the database when the page loads
+    fetch('get_books.php')
+        .then(response => response.json())
+        .then(data => {
+            booksArray = data;
+            booksArray.sort((a, b) => a.title.localeCompare(b.title)); // Sort books alphabetically by title
+            displayBooks();
+        });
+
     bookForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const title = document.getElementById('title').value;
@@ -15,11 +24,27 @@ document.addEventListener('DOMContentLoaded', () => {
             description
         };
 
-        booksArray.push(book);
-        booksArray.sort((a, b) => a.title.localeCompare(b.title)); // Sort books alphabetically by title
-        displayBooks();
+        // Send book data to PHP script to save in the database
+        fetch('save_book.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}&description=${encodeURIComponent(description)}`
+        })
+        .then(response => response.text())
+        .then(data => {
+            console.log(data); // Optional: log the response from save_book.php
 
-        bookForm.reset();
+            booksArray.push(book);
+            booksArray.sort((a, b) => a.title.localeCompare(b.title)); // Sort books alphabetically by title
+            displayBooks();
+
+            bookForm.reset();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
     });
 
     function displayBooks() {
@@ -47,3 +72,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+
