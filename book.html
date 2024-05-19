@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Book Details</h1>
+    </header>
+    <main>
+        <section id="book-details">
+            <div id="book-info">
+                <h2 id="book-title"></h2>
+                <p id="book-author"></p>
+                <p id="book-description"></p>
+            </div>
+            <div id="book-image-container">
+                <img id="book-image" src="" alt="Book Image">
+            </div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const title = urlParams.get('title');
+            const author = urlParams.get('author');
+            const description = urlParams.get('description');
+
+            // Fetch book image from Google Books API (Replace 'YOUR_API_KEY' with your actual API key)
+            const googleBooksAPI = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(title)}+inauthor:${encodeURIComponent(author)}&key=AIzaSyCgNrcHcxgVOWAv5zCg2_EkROZ2xkB1UYA`;
+
+            fetch(googleBooksAPI)
+                .then(response => response.json())
+                .then(data => {
+                    const bookImage = data.items[0].volumeInfo.imageLinks.thumbnail;
+                    document.getElementById('book-image').src = bookImage;
+                })
+                .catch(error => {
+                    console.error('Error fetching book image:', error);
+                    // Handle error or display default image
+                });
+
+            document.getElementById('book-title').textContent = title;
+            document.getElementById('book-author').textContent = `Author: ${author}`;
+            document.getElementById('book-description').textContent = description;
+        });
+    </script>
+</body>
+</html>
